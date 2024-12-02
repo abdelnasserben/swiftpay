@@ -1,0 +1,53 @@
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container-fluid p-5">
+    <h2 class="mb-5">Liste des transferts</h2>
+
+    <form th:action="@{/admin/transfers}" method="post" class="border py-4 px-3 rounded mb-4">
+        <div class="row">
+            <div class="col-auto">
+                <label for="startDate" class="form-label required">Date de début</label>
+                <input type="date" id="startDate" name="startDate" class="form-control"
+                    th:value="${startDate != null ? startDate : #dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+            </div>
+            <div class="col-auto me-3">
+                <label for="endDate" class="form-label required">Date de fin</label>
+                <input type="date" id="endDate" name="endDate" class="form-control"
+                    th:value="${endDate != null ? endDate : #dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+            </div>
+            <div class="col-auto me-4">
+                <div class="form-label required">Trier par status</div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="allTransfers" name="status" value="all" class="form-check-input"
+                        th:checked="${status == 'all' || status == null}" checked>
+                    <label for="allTransfers" class="form-check-label">Tous</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="transfersInitiated" name="status" value="initiated" class="form-check-input"
+                        th:checked="${status == 'initiated'}">
+                    <label for="transfersInitiated" class="form-check-label">Initié</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="transfersApproved" name="status" value="approved" class="form-check-input"
+                        th:checked="${status == 'approved'}">
+                    <label for="transfersApproved" class="form-check-label">Approuvé</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="transfersRefunded" name="status" value="refunded" class="form-check-input"
+                        th:checked="${status == 'refunded'}">
+                    <label for="transfersRefunded" class="form-check-label">Remboursé</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="transfersLocked" name="status" value="locked" class="form-check-input"
+                        th:checked="${status == 'locked'}">
+                    <label for="transfersLocked" class="form-check-label">Verrouillé</label>
+                </div>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-warning w-100">Filtrer</button>
+            </div>
+        </div>
+    </form>
+
+    <div th:replace="~{fragments/transferTable}"></div>
+</div>

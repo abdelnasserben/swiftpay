@@ -1,0 +1,30 @@
+<table class="table table-bordered mb-4">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">MTCN</th>
+            <th scope="col">Emetteur</th>
+            <th scope="col">Bénéficiaire</th>
+            <th scope="col">Montant</th>
+            <th scope="col">Devise</th>
+            <th scope="col">Statut</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${transfers.isEmpty()}">
+            <td colspan="7" style="text-align: center;">Aucun transfert</td>
+        </tr>
+        <tr th:each="transfer: ${transfers}">
+            <td th:text="${transfer.transferMTCN}">123-258-7845</td>
+            <td th:text="${transfer.sender.firstName + ' ' + transfer.sender.lastName}">Jean Dupont</td>
+            <td th:text="${transfer.receiver.firstName + ' ' + transfer.receiver.lastName}">Sarah Hunt</td>
+            <td th:text="${@formatterUtils.formatAmount(transfer.amountToPay)}">65,000</td>
+            <td th:text="${transfer.currencyToPay}">XOF</td>
+            <td th:text="${transfer.status}">Actif</td>
+            <td>
+                <a th:href="@{/transfers/{id}(id=${transfer.transferMTCN})}" class="btn btn-dark w-100">Voir
+                    détails</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

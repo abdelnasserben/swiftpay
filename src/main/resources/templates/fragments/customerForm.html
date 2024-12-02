@@ -1,0 +1,154 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="firstName" class="form-label required">Prénom</label>
+            <input type="text" class="form-control py-3" th:field="*{firstName}"
+                th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{firstName}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="lastName" class="form-label required">Nom</label>
+            <input type="text" class="form-control py-3" th:field="*{lastName}"
+                th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{lastName}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="dateOfBirth" class="form-label required">Date de naissance</label>
+            <input type="date" class="form-control py-3" th:field="*{dateOfBirth}"
+                th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{dateOfBirth}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="identityType" class="form-label required">Type de pièce
+                d'identité</label>
+            <select class="form-select py-3" th:field="*{identityType}"
+                th:classappend="${#fields.hasErrors('identityType')} ? 'is-invalid' : ''">
+                <option value=""></option>
+                <option value="PASSPORT">Passeport</option>
+                <option value="ID_CARD">Carte d'identité nationale</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{identityType}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="identityNumber" class="form-label required">Numéro d'identité</label>
+            <input type="text" class="form-control py-3" th:field="*{identityNumber}"
+                th:classappend="${#fields.hasErrors('identityNumber')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{identityNumber}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="countryIssuingIdentity" class="form-label required">Pays émetteur</label>
+            <select class="form-select select2 py-3" th:field="*{countryIssuingIdentity}"
+                th:classappend="${#fields.hasErrors('countryIssuingIdentity')} ? 'is-invalid' : ''">
+                <option value=""></option>
+                <th:block th:each="country : ${countries}">
+                    <option th:value="${country.codeISO}" th:text="${country.name}"></option>
+                </th:block>
+            </select>
+            <div class="invalid-feedback" th:errors="*{countryIssuingIdentity}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="identityExpirationDate" class="form-label required">Date
+                d'expiration</label>
+            <input type="date" class="form-control py-3" th:field="*{identityExpirationDate}"
+                th:classappend="${#fields.hasErrors('identityExpirationDate')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{identityExpirationDate}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="nationality" class="form-label required">Pays de Naissance</label>
+            <select class="form-select select2 py-3" th:field="*{nationality}"
+                th:classappend="${#fields.hasErrors('nationality')} ? 'is-invalid' : ''">
+                <option value=""></option>
+                <th:block th:each="country : ${countries}">
+                    <option th:value="${country.codeISO}" th:text="${country.name}"></option>
+                </th:block>
+            </select>
+            <div class="invalid-feedback" th:errors="*{nationality}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="city" class="form-label required">Ville</label>
+            <input type="text" class="form-control py-3" th:field="*{city}"
+                th:classappend="${#fields.hasErrors('city')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{city}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="address" class="form-label required">Adresse</label>
+            <input type="text" class="form-control py-3" th:field="*{address}"
+                th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{address}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="postalCode" class="form-label required">Code postal</label>
+            <input type="text" class="form-control py-3" th:field="*{postalCode}"
+                th:classappend="${#fields.hasErrors('postalCode')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{postalCode}"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label required">Numéro de téléphone</label>
+            <input type="tel" class="form-control py-3" th:field="*{phoneNumber}"
+                th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const identityNumberInput = document.getElementById('identityNumber');
+        const identityTypeSelect = document.getElementById('identityType');
+
+        identityNumberInput.addEventListener('blur', function () {
+            const identityType = identityTypeSelect.value;
+            const identityNumber = this.value;
+
+            if (identityNumber && identityType) {
+
+                const url = `http://localhost:8080/api/customer?identityType=${identityType}&identityNumber=${identityNumber}`;
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Client non trouvé');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        document.querySelector('input[name="firstName"]').value = data.firstName || '';
+                        document.querySelector('input[name="lastName"]').value = data.lastName || '';
+                        document.querySelector('input[name="dateOfBirth"]').value = data.dateOfBirth || '';
+                        document.querySelector('select[name="identityType"]').value = data.identityType || '';
+                        document.querySelector('select[name="countryIssuingIdentity"]').value = data.countryIssuingIdentity || '';
+                        document.querySelector('input[name="identityExpirationDate"]').value = data.identityExpirationDate || '';
+                        document.querySelector('select[name="nationality"]').value = data.nationality || '';
+                        document.querySelector('input[name="city"]').value = data.city || '';
+                        document.querySelector('input[name="address"]').value = data.address || '';
+                        document.querySelector('input[name="postalCode"]').value = data.postalCode || '';
+                        document.querySelector('input[name="phoneNumber"]').value = data.phoneNumber || '';
+                    })
+                    .catch(error => console.error('Il y a eu une erreur !', error));
+            }
+        });
+    });
+</script>

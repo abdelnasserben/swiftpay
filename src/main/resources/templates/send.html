@@ -1,0 +1,265 @@
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container-fluid p-5">
+    <h2 class="mb-5">Envoyez de l'argent</h2>
+
+    <div class="row">
+        <!-- Formulaire à gauche -->
+        <div class="col-md-9 mb-4">
+
+            <div th:replace="~{fragments/alert-message}"></div>
+
+            <form th:action="@{/send}" method="POST" th:object="${sendDto}">
+
+                <!-- Informations sur le montant et le pays destinataire -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Montant et pays destinataire
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="receiverCountry" class="form-label required">Pays destinataire</label>
+                                    <select class="form-select select2 py-3" th:field="*{receiverCountry}"
+                                        th:classappend="${#fields.hasErrors('receiverCountry')} ? 'is-invalid' : ''">
+                                        <option value=""></option>
+                                        <th:block th:each="office : ${offices}">
+                                            <th:block th:each="currency : ${office.currencies}">
+                                                <option th:value="${office.codeISO} + '_' + ${currency.code}"
+                                                    th:text="${office.name + ' (' + currency.code + ')'}">
+                                                </option>
+                                            </th:block>
+                                        </th:block>
+                                    </select>
+                                    <div class="invalid-feedback" th:errors="*{receiverCountry}">Veuillez sélectionner
+                                        un pays destinataire.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="amountSent" class="form-label required">Montant à envoyer</label>
+                                    <input type="number" class="form-control py-3" th:field="*{amountSent}"
+                                        th:classappend="${#fields.hasErrors('amountSent')} ? 'is-invalid' : ''"
+                                        step="0.01">
+                                    <div class="invalid-feedback" th:errors="*{amountSent}"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="totalAmount" class="form-label">Montant total (avec frais)</label>
+                                    <input type="number" class="form-control py-3" id="totalAmount" name="totalAmount"
+                                        step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations supplémentaire de l'expéditeur -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Informations sur l'émetteur
+                    </div>
+                    <div class="card-body">
+                        <div th:replace="~{fragments/customerForm}"></div>
+                    </div>
+                </div>
+
+                <!-- Informations supplémentaire de le bénéficiaire -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Bénéficiaire
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="receiverFirstName" class="form-label required">Prénom</label>
+                                    <input type="text" class="form-control py-3" th:field="*{receiverFirstName}"
+                                        th:classappend="${#fields.hasErrors('receiverFirstName')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:errors="*{receiverFirstName}"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="receiverLastName" class="form-label required">Nom</label>
+                                    <input type="text" class="form-control py-3" th:field="*{receiverLastName}"
+                                        th:classappend="${#fields.hasErrors('receiverLastName')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:errors="*{receiverLastName}"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="receiverPhone" class="form-label">Numéro de téléphone</label>
+                                    <input type="tel" class="form-control py-3" th:field="*{receiverPhone}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-3">Envoyer de
+                    l'argent</button>
+
+            </form>
+        </div>
+
+        <!-- Bloc de récapitulatif à droite -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    Récapitulatif du transfert
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-globe-americas me-2"></i> Pays d'Origine
+                        </div>
+                        <div class="col text-end" th:text="${#authentication.principal.agency.office.name}">Comores
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave me-2"></i> Montant à envoyer
+                        </div>
+                        <div class="col text-end" id="summaryAmountToSent">
+                            0 <span th:text="${#authentication.principal.agency.office.currency}">KMF</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign me-2"></i> Frais
+                        </div>
+                        <div class="col text-end" id="summaryFees">
+                            0 <span th:text="${#authentication.principal.agency.office.currency}">KMF</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-calculator me-2"></i> Montant total
+                        </div>
+                        <div class="col text-end" id="summaryTotalAmount">
+                            0 <span th:text="${#authentication.principal.agency.office.currency}">KMF</span>
+                        </div>
+                    </div>
+
+                    <hr class="mb-3">
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-globe-americas me-2"></i> Pays destinataire
+                        </div>
+                        <div class="col text-end" id="summaryReceiverCountry">---</div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave me-2"></i> Montant à Payer
+                        </div>
+                        <div class="col text-end" id="summaryAmountToPay">---</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Fonction pour valider le champ receiverCountry
+        function validateReceiverCountry() {
+            const receiverCountry = document.getElementById("receiverCountry");
+            if (!receiverCountry.value) {
+                receiverCountry.classList.add("is-invalid");
+                return false;
+            } else {
+                receiverCountry.classList.remove("is-invalid");
+                return true;
+            }
+        }
+
+        function validateAmounts(amountSent, totalAmount) {
+            if (!amountSent && !totalAmount) {
+                return false;
+            }
+            if (amountSent && isNaN(amountSent)) {
+                return false;
+            }
+            if (totalAmount && isNaN(totalAmount)) {
+                return false;
+            }
+            return true;
+        }
+
+
+
+        // Fonction pour mettre à jour les montants
+        function updateAmounts(changedField) {
+
+            if (!validateReceiverCountry()) {
+                return;
+            }
+            const receiverCountry = document.getElementById("receiverCountry").value;
+            const amountSent = document.getElementById("amountSent").value;
+            const totalAmount = document.getElementById("totalAmount").value;
+
+            if (!validateAmounts(amountSent, totalAmount)) {
+                return;
+            }
+
+            const url = `http://localhost:8080/api/send-money?receiverCountry=${receiverCountry}&amountSent=${amountSent}&totalAmount=${totalAmount}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau');
+                    }
+                    return response.json();
+                })
+                .then(response => {
+                    console.log(response);
+
+                    // Mettre à jour les montants
+                    document.getElementById("amountSent").value = response.amountSent;
+                    document.getElementById("totalAmount").value = response.totalAmount;
+
+                    // Mettre à jour le récapitulatif
+                    document.getElementById("summaryReceiverCountry").textContent = response.receiverCountryName;
+                    document.getElementById("summaryAmountToSent").textContent = response.amountSent + " " + response.baseCurrency;
+                    document.getElementById("summaryFees").textContent = response.fees + " " + response.baseCurrency;
+                    document.getElementById("summaryTotalAmount").textContent = response.totalAmount + " " + response.baseCurrency;
+                    document.getElementById("summaryAmountToPay").textContent = response.amountToPay + " " + response.currencyToPay;
+                })
+                .catch(error => console.error('Il y a eu une erreur !', error));
+
+        }
+
+        // Écouteur les évenements pour remettre les montants à zéro
+        document.getElementById("receiverCountry").addEventListener("change", function () {
+            document.getElementById("amountSent").value = 0;
+            document.getElementById("totalAmount").value = 0;
+        });
+
+        document.getElementById("amountSent").addEventListener("input", function () {
+            document.getElementById("totalAmount").value = 0;
+        });
+
+        document.getElementById("totalAmount").addEventListener("input", function () {
+            document.getElementById("amountSent").value = 0;
+        });
+
+
+
+        // Écouteur les évenements pour calculer les rate
+        document.getElementById("amountSent").addEventListener("blur", function () {
+            updateAmounts('amountSent');
+        });
+
+        document.getElementById("totalAmount").addEventListener("blur", function () {
+            updateAmounts('totalAmount');
+        });
+    });
+
+</script>

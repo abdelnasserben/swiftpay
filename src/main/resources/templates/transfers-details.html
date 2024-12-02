@@ -1,0 +1,209 @@
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container-fluid p-5">
+    <h2 class="mb-5">Transfert Détails</h2>
+
+    <div th:replace="~{fragments/alert-message}"></div>
+
+    <!-- Détails du transfert -->
+    <div class="mb-5">
+        <h3 class="fs-6 border border-dark fw-bold text-center py-3 rounded mb-4">MTCN: <span
+                th:text="${@formatterUtils.formatMTCN(transfer.transferMTCN)}">458-145-4785</span>
+        </h3>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Date/Heure</span>
+                    <span th:text="${#temporals.format(transfer.createdAt, 'yyyy-MM-dd HH:mm')}">14-11-2024
+                        10:33</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Taux de change</span>
+                    <span th:text="${transfer.rate}">65098,458</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Pays de destination</span>
+                    <span class="text-uppercase" th:text="${transfer.receivingCountry}">Comores</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Devise de destination</span>
+                    <span class="text-uppercase" th:text="${transfer.currencyToPay}">KMF</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Montant envoyé</span>
+                    <span class="text-uppercase"
+                        th:text="${@formatterUtils.formatAmount(transfer.amountSent) + ' ' + transfer.currencySent}">1000
+                        EUR</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Montant à payer</span>
+                    <span class="text-uppercase"
+                        th:text="${@formatterUtils.formatAmount(transfer.amountToPay) + ' ' + transfer.currencyToPay}">650
+                        000 XOF</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <span>Status</span>
+                    <span th:text="${transfer.status}" class="badge bg-primary">INITIATED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations sur l'émetteur -->
+    <div class="card mb-5">
+        <div class="card-header">Informations sur l'émetteur</div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Prénom</span>
+                        <span class="text-uppercase" th:text="${transfer.sender.firstName}">Jean</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Nom</span>
+                        <span class="text-uppercase" th:text="${transfer.sender.lastName}">Dupont</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Adresse</span>
+                        <span class="text-uppercase"
+                            th:text="${transfer.sender.address + ' ' + transfer.sender.city}">123 Rue de Général
+                            Degaulle Paris</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Code Postal</span>
+                        <span class="text-uppercase" th:text="${transfer.sender.postalCode}">75001</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Téléphone</span>
+                        <span class="text-uppercase" th:text="${transfer.sender.phoneNumber}">+33 6 54 87 52
+                            58</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Pays D'origine</span>
+                        <span class="text-uppercase" th:text="${transfer.IssuingCountry}">France</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations sur le bénéficiaire -->
+    <div class="card mb-5">
+        <div class="card-header">Informations sur le bénéficiaire</div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Prénom</span>
+                        <span class="text-uppercase" th:text="${transfer.receiver.firstName}">Jean</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Nom</span>
+                        <span class="text-uppercase" th:text="${transfer.receiver.lastName}">Dupont</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Adresse</span>
+                        <span class="text-uppercase"
+                            th:text="${transfer.receiver.address + ' ' + transfer.receiver.city}">123 Rue de Général
+                            Degaulle Paris</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Code Postal</span>
+                        <span class="text-uppercase" th:text="${transfer.receiver.postalCode}">75001</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Téléphone</span>
+                        <span class="text-uppercase" th:text="${transfer.receiver.phoneNumber}">+33 6 54 87 52
+                            58</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <span>Pays D'origine</span>
+                        <span class="text-uppercase" th:text="${transfer.receivingCountry}">France</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- action buttons -->
+    <div class="d-flex align-items-start no-print">
+        <button onclick="window.print()" class="btn btn-dark mb-2 me-3">
+            <i class="fas fa-print"></i> Imprimer
+        </button>
+
+        <div th:if="${transfer.status != 'PAID' && transfer.status != 'REFUNDED'}" class="text-center mb-4">
+            <div class="d-flex" sec:authorize="hasRole('ADMIN')">
+                <form class="me-2 mb-2" th:action="@{/transfers/{id}/approve(id=${transfer.transferMTCN})}"
+                    method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir approuver ce transfert ?');">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="fas fa-check"></i> Approuver
+                    </button>
+                </form>
+                <form class="me-2 mb-2" th:action="@{/transfers/{id}/lock(id=${transfer.transferMTCN})}" method="post"
+                    onsubmit="return confirm('Êtes-vous sûr de vouloir verrouiller ce transfert ?');">
+                    <button type="submit" class="btn btn-warning me-2">
+                        <i class="fas fa-lock"></i> Verrouiller
+                    </button>
+                </form>
+                <form class="me-2 mb-2" th:action="@{/transfers/{id}/update(id=${transfer.transferMTCN})}"
+                    method="post">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Modifier
+                    </button>
+                </form>
+                <form class="mb-2" th:action="@{/transfers/{id}/refund(id=${transfer.transferMTCN})}" method="post"
+                    onsubmit="return confirm('Êtes-vous sûr de vouloir rembourser ce transfert ?');">
+                    <button type="submit" class="btn btn-danger me-2">
+                        <i class="fas fa-times"></i> Rembourser
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

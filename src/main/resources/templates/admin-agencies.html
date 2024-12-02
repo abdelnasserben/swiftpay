@@ -1,0 +1,76 @@
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container-fluid p-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2>
+            <a th:href="@{/admin}" class="btn btn-dark btn-sm me-2">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+            <span th:text="${isAgenciesList ? 'Toutes les agences' : 'Agences de ' + office.name}"></span>
+        </h2>
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addAgencyModal">
+            <i class="fas fa-plus"></i> Nouvelle Agence
+        </button>
+    </div>
+
+    <div th:replace="~{fragments/alert-message}"></div>
+
+    <table class="table table-bordered mb-4">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Pays</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Adresse</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itérer selon le type de données -->
+            <tr th:each="agency : ${agencies}">
+                <td th:text="${'#' + agency.id}">#1</td>
+                <td th:text="${isAgenciesList ? agency.office.name : office.name}">Comores</td>
+                <td th:text="${agency.name}">MUTS</td>
+                <td th:text="${agency.address}">12 Rue des Paillons 75000 Paris</td>
+                <td>
+                    <a th:href="@{/admin/users/{id}(id=${agency.id})}" class="btn btn-dark">Détails</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="addAgencyModal" tabindex="-1" aria-labelledby="addAgencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAgencyModalLabel">Ajouter une Agence</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="px-3" th:action="@{/admin/agencies}" method="post">
+                    <div class="mb-3">
+                        <label for="codeISO" class="form-label required">Bureau</label>
+                        <select class="form-select select2 py-3" name="codeISO">
+                            <option value=""></option>
+                            <th:block  th:each="office : ${offices}">
+                                <option th:value="${office.codeISO}" th:text="${office.name}">
+                                </option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="agencyName" class="form-label required">Nom de l'agence</label>
+                        <input type="text" class="form-control py-3" name="agencyName" id="agencyName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="agencyAddress" class="form-label required">Adresse</label>
+                        <input type="text" class="form-control py-3" name="agencyAddress" id="agencyAddress">
+                    </div>
+                    <button type="submit" class="btn btn-success">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

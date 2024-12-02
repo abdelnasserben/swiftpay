@@ -1,0 +1,49 @@
+<div th:replace="~{fragments/alert-message}"></div>
+
+<!-- Formulaire pour entrer le MTCN -->
+<form class="mb-4" th:action="@{/search}" method="POST">
+    <input type="hidden" name="actionType" th:value="${actionType}">
+    <div class="row">
+        <div class="col-md-10 mb-2">
+            <input type="text" name="transferMTCN" class="form-control py-3" placeholder="Entrez le code MTCN"
+                th:classappend="${transferMTCNError != null} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${transferMTCNError}" th:text="${transferMTCNError}">Message</div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <button class="btn btn-warning fw-bold py-3 w-100" type="submit">Rechercher</button>
+        </div>
+    </div>
+</form>
+
+<!-- Tableau des détails du transfert (visible après validation du MTCN actif) -->
+<table th:if="${transfer}" class="table table-bordered mb-4">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">MTCN</th>
+            <th scope="col">Émetteur</th>
+            <th scope="col">Bénéficiaire</th>
+            <th scope="col">Montant</th>
+            <th scope="col-auto">Devise</th>
+            <th scope="col-auto">Statut</th>
+            <th scope="col-auto">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td th:text="${transfer.transferMTCN}">123-258-7845</td>
+            <td th:text="${transfer.sender.firstName + ' ' + transfer.sender.lastName}">Jean Dupont</td>
+            <td th:text="${transfer.receiver.firstName + ' ' + transfer.receiver.lastName}">Sarah Hunt</td>
+            <td th:text="${@formatterUtils.formatAmount(transfer.amountToPay)}">65,000</td>
+            <td th:text="${transfer.currencyToPay}">XOF</td>
+            <td th:text="${transfer.status}">Actif</td>
+            <td>
+                <form class="w-100" th:if="${isPayable}" method="POST" th:action="@{/payout}">
+                    <input type="hidden" name="transferMTCN" th:value="${transfer.transferMTCN}">
+                    <button type="submit" class="btn btn-dark fw-bold w-100">Payer</button>
+                </form>
+                <a th:unless="${isPayable}" th:href="@{/transfers/{id}(id=${transfer.transferMTCN})}"
+                    class="btn btn-dark fw-bold w-100">Détails</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

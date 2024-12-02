@@ -1,0 +1,38 @@
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container-fluid p-5">
+    <h2 class="mb-5">Liste de transferts</h2>
+
+    <form th:action="@{/transfers}" method="post" class="border py-4 px-3 rounded mb-4">
+        <div class="row">
+            <div class="col-auto">
+                <label for="startDate" class="form-label required">Date de début</label>
+                <input type="date" id="startDate" name="startDate" class="form-control"
+                    th:value="${startDate != null ? startDate : #dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+            </div>
+            <div class="col-auto me-3">
+                <label for="endDate" class="form-label required">Date de fin</label>
+                <input type="date" id="endDate" name="endDate" class="form-control"
+                    th:value="${endDate != null ? endDate : #dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+            </div>
+            <div class="col-auto me-4">
+                <div class="form-label required">Trier par</div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="agencyTransfers" name="filterType" value="byAgency" class="form-check-input"
+                        th:checked="${filterType == 'byAgency'}">
+                    <label for="agencyTransfers" class="form-check-label">Agence</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="userTransfers" name="filterType" value="byUser" class="form-check-input"
+                        th:checked="${filterType == 'byUser' || filterType == null}" checked>
+                    <label for="userTransfers" class="form-check-label">Mes transferts</label>
+                </div>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-warning w-100">Filtrer</button>
+            </div>
+        </div>
+    </form>
+
+    <div th:replace="~{fragments/transferTable}"></div>
+</div>
